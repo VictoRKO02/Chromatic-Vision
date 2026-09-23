@@ -1,39 +1,62 @@
-# Chromatic Manipulator — Reconhecimento de Cores com OpenCV
+# Chromatic Vision — Reconhecimento de Cores com OpenCV
 
-Projeto desenvolvido a partir de uma ideia iniciada por mim em 2024.1 no IEEE, iniciativa estudantil do SENAI CIMATEC.
+O **Chromatic Vision** é um projeto de Visão Computacional desenvolvido em Python para detecção, identificação e localização de objetos com base em suas cores.
 
-A proposta original do **Chromatic Manipulator** era utilizar visão computacional para identificar objetos por cor e, a partir dessa classificação, orientar o movimento de uma garra mecânica.
+A ideia surgiu originalmente em 2024.1, durante uma iniciativa estudantil vinculada ao IEEE no SENAI CIMATEC, a partir do projeto **Chromatic Manipulator**, cuja proposta era utilizar visão computacional para auxiliar uma garra mecânica na identificação e separação de objetos por cor.
 
-O projeto completo não foi concluído naquele momento, porém a etapa de reconhecimento de cores foi implementada como prova de conceito e posteriormente reorganizada neste repositório.
+Posteriormente, o projeto foi retomado e aprimorado no contexto da **AWS Student Builder Group**, também no SENAI CIMATEC, com foco na consolidação da etapa de visão computacional, organização do código e expansão das funcionalidades de detecção.
+
+---
 
 ## Objetivo
 
-Detectar objetos por cor utilizando uma câmera, identificar sua posição na imagem e retornar as coordenadas do centro do objeto.
+Desenvolver uma aplicação capaz de identificar objetos por cor em imagens ou vídeo em tempo real, determinar sua posição na cena e retornar as coordenadas do centro de cada objeto detectado.
+
+O projeto explora conceitos fundamentais de:
+
+* Visão Computacional
+* Processamento Digital de Imagens
+* Segmentação por cores
+* Detecção de objetos por contornos
+* Manipulação de imagens em tempo real
+
+---
 
 ## Funcionalidades
 
-- Captura de vídeo em tempo real pela webcam
-- Reconhecimento de diferentes cores
-- Conversão de imagens de BGR para HSV
-- Criação de máscaras por faixa de cor
-- Redução de ruídos com operações morfológicas
-- Detecção de contornos
-- Criação de bounding boxes
-- Identificação das coordenadas X e Y do objeto
-- Contagem de objetos detectados
-- Salvamento de capturas
-- Processamento de imagens estáticas
+O sistema possui suporte a processamento por webcam e imagens estáticas.
+
+Entre as principais funcionalidades estão:
+
+* Captura de vídeo em tempo real utilizando webcam
+* Detecção de diferentes cores
+* Conversão do espaço de cores BGR para HSV
+* Segmentação por intervalos de cor
+* Criação de máscaras binárias
+* Redução de ruídos por operações morfológicas
+* Detecção de contornos
+* Filtragem de objetos por área
+* Geração de bounding boxes
+* Identificação das coordenadas centrais `(X, Y)` dos objetos
+* Classificação da cor detectada
+* Contagem de objetos encontrados
+* Salvamento de capturas
+* Processamento de imagens estáticas
+
+---
 
 ## Tecnologias utilizadas
 
-- Python
-- OpenCV
-- NumPy
+* **Python**
+* **OpenCV**
+* **NumPy**
+
+---
 
 ## Estrutura do projeto
 
 ```text
-IEEE-reconhecimento-cores/
+chromatic-vision/
 ├── app.py
 ├── detectar_imagem.py
 ├── requirements.txt
@@ -41,6 +64,22 @@ IEEE-reconhecimento-cores/
 ├── .gitignore
 └── capturas/
 ```
+
+### Principais arquivos
+
+`app.py`
+
+Responsável pela execução da aplicação em tempo real utilizando a webcam.
+
+`detectar_imagem.py`
+
+Permite aplicar o mesmo processo de detecção em imagens estáticas.
+
+`capturas/`
+
+Diretório utilizado para armazenar as imagens capturadas durante a execução do sistema.
+
+---
 
 ## Instalação
 
@@ -50,13 +89,13 @@ Clone o repositório:
 git clone https://github.com/VictoRKO02/IEEE-reconhecimento-cores.git
 ```
 
-Entre na pasta:
+Entre no diretório do projeto:
 
 ```bash
 cd IEEE-reconhecimento-cores
 ```
 
-Crie um ambiente virtual:
+Crie um ambiente virtual.
 
 ### Windows
 
@@ -78,9 +117,11 @@ Instale as dependências:
 python -m pip install -r requirements.txt
 ```
 
+---
+
 ## Execução
 
-Para iniciar o reconhecimento pela webcam:
+Para iniciar a detecção de objetos em tempo real utilizando a webcam:
 
 ```bash
 python app.py
@@ -88,71 +129,214 @@ python app.py
 
 ### Controles
 
-- `S` — salva uma captura
-- `Q` — encerra o programa
+Durante a execução:
 
-As imagens salvas ficam armazenadas na pasta `capturas`.
+```text
+S → Salvar captura
+Q → Encerrar aplicação
+```
 
-## Processamento de imagem estática
+As imagens capturadas são armazenadas automaticamente no diretório:
 
-Também é possível detectar cores em uma imagem já existente:
+```text
+capturas/
+```
+
+---
+
+## Processamento de imagens estáticas
+
+O sistema também pode processar imagens armazenadas localmente.
+
+Execute:
 
 ```bash
 python detectar_imagem.py imagem.jpg
 ```
 
-Para definir o nome da imagem de saída:
+Também é possível especificar o nome do arquivo de saída:
 
 ```bash
 python detectar_imagem.py imagem.jpg --saida resultado.jpg
 ```
 
+---
+
 ## Como funciona
 
-O fluxo principal do sistema é:
+O processamento realizado pelo Chromatic Vision segue o seguinte pipeline:
 
 ```text
 Webcam / Imagem
-      ↓
+       ↓
+Aquisição da imagem
+       ↓
 Conversão BGR → HSV
-      ↓
-Máscaras de cor
-      ↓
+       ↓
+Segmentação por faixa de cor
+       ↓
+Criação das máscaras
+       ↓
+Operações morfológicas
+       ↓
 Redução de ruídos
-      ↓
+       ↓
 Detecção de contornos
-      ↓
+       ↓
 Filtro por área
-      ↓
+       ↓
 Bounding Box
-      ↓
+       ↓
 Centro do objeto (X, Y)
-      ↓
+       ↓
 Classificação da cor
 ```
 
-O espaço de cores HSV é utilizado porque facilita a segmentação das cores ao separar tonalidade, saturação e brilho.
+---
 
-## Aplicação original
+## Por que utilizar HSV?
 
-A ideia inicial do Chromatic Manipulator era integrar a detecção visual com uma garra mecânica:
+Imagens capturadas pelo OpenCV utilizam originalmente o formato **BGR**.
 
-```text
-Câmera → OpenCV → Cor + posição → Controlador → Garra mecânica
+Entretanto, para segmentação por cores, o espaço **HSV — Hue, Saturation and Value —** pode ser mais adequado, pois separa as informações de:
+
+* **Hue:** tonalidade da cor
+* **Saturation:** intensidade ou saturação
+* **Value:** nível de brilho
+
+Essa separação facilita a definição de intervalos utilizados para reconhecer diferentes cores na imagem.
+
+O processamento ocorre conceitualmente da seguinte forma:
+
+```python
+imagem_bgr
+     ↓
+cv2.cvtColor()
+     ↓
+imagem_hsv
+     ↓
+cv2.inRange()
+     ↓
+máscara binária
 ```
 
-Assim, a posição e a cor de um objeto poderiam ser utilizadas para orientar automaticamente o movimento da garra.
+A partir dessa máscara, o OpenCV consegue localizar regiões da imagem que correspondem à cor desejada.
+
+---
+
+## Detecção e localização dos objetos
+
+Após a segmentação, o sistema identifica os contornos presentes na máscara.
+
+Objetos muito pequenos podem ser descartados utilizando um limite mínimo de área, reduzindo falsas detecções causadas por ruídos.
+
+Para cada objeto válido é calculada uma região delimitadora:
+
+```text
+┌────────────────────┐
+│                    │
+│       OBJETO       │
+│        ●           │
+│      (X, Y)        │
+│                    │
+└────────────────────┘
+```
+
+O ponto `(X, Y)` representa aproximadamente o centro do objeto detectado.
+
+Essas informações podem posteriormente ser utilizadas por outros sistemas, como controladores robóticos.
+
+---
+
+## Origem do projeto
+
+A primeira versão da ideia foi chamada de **Chromatic Manipulator**.
+
+A proposta era integrar uma câmera a uma garra mecânica capaz de identificar objetos por cor e utilizar sua posição para auxiliar no movimento do manipulador.
+
+A arquitetura conceitual era:
+
+```text
+Objeto
+  ↓
+Câmera
+  ↓
+OpenCV
+  ↓
+Detecção de cor
+  ↓
+Posição (X, Y)
+  ↓
+Controlador
+  ↓
+Garra mecânica
+```
+
+Embora a integração completa com a parte mecânica não tenha sido finalizada na versão inicial, o módulo de visão computacional tornou-se a base para o desenvolvimento do **Chromatic Vision**.
+
+---
+
+## Evolução do projeto
+
+A versão atual concentra-se no desenvolvimento e aprimoramento do módulo de visão computacional.
+
+O sistema evoluiu para permitir:
+
+```text
+Imagem
+   ↓
+Segmentação
+   ↓
+Detecção
+   ↓
+Classificação
+   ↓
+Localização
+   ↓
+Informações estruturadas
+```
+
+Isso possibilita que o projeto seja posteriormente integrado a aplicações de automação, robótica ou análise visual.
+
+---
 
 ## Possíveis evoluções
 
-- Integração com Arduino ou ESP32
-- Comunicação com servomotores
-- Separação automática de objetos por cor
-- Detecção de formas
-- Registro das detecções em CSV ou banco de dados
-- Conversão de coordenadas em pixels para coordenadas físicas
-- Integração com um braço robótico
+Entre as próximas possibilidades de desenvolvimento estão:
+
+* Integração com Arduino
+* Integração com ESP32
+* Controle de servomotores
+* Integração com braço robótico
+* Separação automatizada de objetos
+* Conversão de coordenadas em pixels para coordenadas físicas
+* Detecção de formas geométricas
+* Registro automático das detecções em CSV
+* Armazenamento das detecções em banco de dados
+* Criação de uma interface gráfica
+* Desenvolvimento de uma API para disponibilizar as detecções
+* Aplicação de algoritmos de Machine Learning
+* Comparação entre segmentação tradicional e modelos de Visão Computacional baseados em Deep Learning
+
+---
+
+## Áreas relacionadas
+
+O projeto está relacionado principalmente às áreas de:
+
+* Inteligência Artificial
+* Visão Computacional
+* Processamento Digital de Imagens
+* Automação
+* Robótica
+* Sistemas Embarcados
+
+---
 
 ## Autor
 
 **Victor Mendes**
+
+Engenharia da Computação — SENAI CIMATEC
+
+GitHub: `VictoRKO02`
